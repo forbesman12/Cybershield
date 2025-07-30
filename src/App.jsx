@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 
 import Navbar from './Components/Navbar/Navbar'
-import Hero from './Components/Hero/hero'
+import Hero from './Components/Hero/Hero'
 import CryptoRecoverySection from './Components/Cryptorecoverysec/recovery'
 import Footer from './Components/Footer/Footer'
 import RecoveryStepsSection from './Components/Step/Step'

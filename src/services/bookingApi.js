@@ -122,6 +122,58 @@ export const bookingApi = {
     }
     
     return responseData;
+  },
+
+  /**
+   * Get booking by ID with payment status
+   * @param {string} bookingId - The booking ID
+   * @param {boolean} includePaymentStatus - Whether to include payment proof status
+   * @returns {Promise<Object>} API response with booking and payment details
+   */
+  async getBookingWithPaymentStatus(bookingId, includePaymentStatus = true) {
+    const response = await fetch(`${API_BASE_URL}/bookings/${bookingId}`);
+    const responseData = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(responseData.message || `HTTP Error: ${response.status}`);
+    }
+    
+    // If payment status is requested and user is authenticated
+    if (includePaymentStatus && this.isUserAuthenticated()) {
+      try {
+        // This would be imported from paymentApi but we'll keep it simple
+        const paymentResponse = await fetch(`${API_BASE_URL}/payments/proof/${bookingId}`, {
+          headers: this.getAuthHeaders()
+        });
+        
+        if (paymentResponse.ok) {
+          const paymentData = await paymentResponse.json();
+          responseData.data.paymentProof = paymentData.data;
+        }
+      } catch (error) {
+        // Payment proof not found or not accessible - that's okay
+        console.log('No payment proof found for this booking');
+      }
+    }
+    
+    return responseData;
+  },
+
+  /**
+   * Check if user is authenticated (helper method)
+   * @returns {boolean} Authentication status
+   */
+  isUserAuthenticated() {
+    return !!(localStorage.getItem('userToken') || sessionStorage.getItem('userToken'));
+  },
+
+  /**
+   * Get authentication headers (helper method)
+   * @returns {Object} Headers with authorization
+   */
+  getAuthHeaders() {
+    const token = localStorage.getItem('userToken') || sessionStorage.getItem('userToken');
+    return token ? { 'Authorization': `Bearer ${token}` } : {};
   }
 };
 

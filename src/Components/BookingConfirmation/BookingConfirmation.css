@@ -1,220 +1,232 @@
 /* Booking Confirmation Page Styles */
 .booking-confirmation-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 2rem 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
 .booking-confirmation-container * {
   box-sizing: border-box;
 }
 
-/* Container */
-.booking-confirmation-container .container {
-  max-width: 1024px;
+/* Main Layout */
+.confirmation-layout {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
 }
 
-/* Headings */
-.booking-confirmation-container h1 {
-  color: #1f2937;
-  font-weight: 700;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
-}
-
-.booking-confirmation-container h2 {
-  color: #374151;
-  font-weight: 600;
-  border-bottom: 2px solid #e5e7eb;
-  padding-bottom: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.booking-confirmation-container h3 {
-  color: #4b5563;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-}
-
-/* Cards and Sections */
-.booking-confirmation-container .bg-white {
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(229, 231, 235, 0.8);
-  transition: box-shadow 0.3s ease;
-}
-
-.booking-confirmation-container .bg-white:hover {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-/* Booking Summary Styles */
-.booking-confirmation-container .border-b {
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.booking-confirmation-container .border-t {
-  border-top: 2px solid #e5e7eb;
-}
-
-/* Reference Number Styling */
-.booking-confirmation-container .bg-blue-50 {
-  background-color: #eff6ff;
-  border: 1px solid #dbeafe;
-}
-
-.booking-confirmation-container .bg-blue-100 {
-  background-color: #dbeafe;
-  border: 1px solid #93c5fd;
-}
-
-.booking-confirmation-container .text-blue-800 {
-  color: #1e40af;
-}
-
-/* Bank Details Section */
-.booking-confirmation-container .bg-gray-50 {
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
-}
-
-/* Important Instructions Alert */
-.booking-confirmation-container .bg-red-50 {
-  background-color: #fef2f2;
-  border-left: 4px solid #ef4444;
+/* Booking Summary Box */
+.booking-summary-box {
+  background: #fff;
+  border: 3px solid #D2691E;
   border-radius: 8px;
+  padding: 1.5rem;
+  max-width: 400px;
 }
 
-.booking-confirmation-container .text-red-800 {
-  color: #991b1b;
+.booking-summary-title {
+  color: #666;
+  font-size: 14px;
+  margin: 0 0 8px 0;
+  font-weight: normal;
 }
 
-.booking-confirmation-container .text-red-700 {
-  color: #b91c1c;
+.room-info {
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
 }
 
-/* File Upload Area */
-.booking-confirmation-container input[type="file"] {
-  transition: all 0.3s ease;
-  border: 2px dashed #d1d5db;
+.booking-details {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.detail-label, .cost-label {
+  margin: 15px 0 5px 0;
+  font-weight: normal;
+}
+
+.date-range {
+  color: #333;
+  font-weight: 500;
+  margin: 0 0 3px 0;
+}
+
+.days-count {
+  margin: 0 0 15px 0;
+}
+
+.cost-amount {
+  color: #333;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+.total-cost {
+  color: #333;
+  font-weight: 600;
+  margin: 5px 0 0 0;
+}
+
+/* Payment Section */
+.payment-section {
+  background: #fff;
+  padding: 1.5rem;
   border-radius: 8px;
-  padding: 1rem;
-  background-color: #fafafa;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.booking-confirmation-container input[type="file"]:hover {
-  border-color: #3b82f6;
-  background-color: #f0f9ff;
+.payment-for-label {
+  color: #999;
+  font-size: 14px;
+  margin: 0 0 15px 0;
 }
 
-.booking-confirmation-container input[type="file"]:focus {
-  outline: none;
-  ring: 2px;
-  ring-color: #3b82f6;
-  border-color: #3b82f6;
+.total-cost-header {
+  color: #333;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
 }
 
-/* Upload Button */
-.booking-confirmation-container .bg-green-600 {
-  background-color: #16a34a;
-  transition: all 0.3s ease;
-  transform: translateY(0);
+.payment-type-section {
+  margin-bottom: 30px;
 }
 
-.booking-confirmation-container .bg-green-600:hover {
-  background-color: #15803d;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4);
+.payment-type-label {
+  color: #999;
+  font-size: 14px;
+  margin: 0 0 10px 0;
 }
 
-.booking-confirmation-container .bg-green-600:active {
-  transform: translateY(0);
+.payment-option {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 15px;
 }
 
-/* Status Messages */
-.booking-confirmation-container .bg-green-50 {
-  background-color: #f0fdf4;
-  border: 1px solid #bbf7d0;
+.payment-method {
+  color: #333;
+  font-size: 14px;
 }
 
-.booking-confirmation-container .text-green-800 {
-  color: #166534;
+.pay-now-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-.booking-confirmation-container .bg-red-50 {
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
+.pay-now-btn:hover {
+  background: #218838;
 }
 
-.booking-confirmation-container .text-red-800 {
-  color: #991b1b;
+.bank-details-section {
+  border-top: 1px solid #eee;
+  padding-top: 20px;
 }
 
-/* Help Section */
-.booking-confirmation-container .bg-yellow-50 {
-  background-color: #fefce8;
-  border: 1px solid #fde047;
+.bank-details-title {
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 15px 0;
 }
 
-.booking-confirmation-container .text-yellow-800 {
-  color: #854d0e;
+.bank-info {
+  margin-bottom: 15px;
 }
 
-.booking-confirmation-container .text-yellow-700 {
-  color: #a16207;
+.account-name {
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 5px 0;
 }
 
-/* Loading Spinner Animation */
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+.account-number {
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 5px 0;
 }
 
-.booking-confirmation-container .animate-spin {
-  animation: spin 1s linear infinite;
+.bank-name {
+  color: #666;
+  font-size: 14px;
+  margin: 0;
+}
+
+.payment-instruction {
+  color: #666;
+  font-size: 14px;
+  font-style: italic;
+  margin: 15px 0 0 0;
+}
+
+.payment-status {
+  margin-top: 15px;
+  padding: 10px;
+  background: #e8f5e8;
+  border-radius: 4px;
+  color: #2d5a2d;
+  font-size: 14px;
 }
 
 /* Responsive Design */
+@media (max-width: 900px) {
+  .confirmation-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .booking-summary-box {
+    max-width: none;
+  }
+}
+
 @media (max-width: 768px) {
   .booking-confirmation-container {
-    padding: 1rem 0;
+    padding: 1rem 0.5rem;
   }
   
-  .booking-confirmation-container .container {
-    padding: 0 1rem;
+  .confirmation-layout {
+    gap: 1rem;
   }
   
-  .booking-confirmation-container .grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .booking-confirmation-container h1 {
-    font-size: 1.875rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .booking-confirmation-container .text-2xl {
-    font-size: 1.5rem;
+  .booking-summary-box,
+  .payment-section {
+    padding: 1rem;
   }
 }
 
 @media (max-width: 480px) {
-  .booking-confirmation-container .container {
-    padding: 0 0.75rem;
+  .total-cost-header {
+    font-size: 18px;
   }
   
-  .booking-confirmation-container .bg-white {
-    margin-bottom: 1rem;
+  .confirmation-layout {
+    gap: 0.75rem;
+  }
+  
+  .booking-summary-box {
+    border-width: 2px;
     padding: 1rem;
-  }
-  
-  .booking-confirmation-container h1 {
-    font-size: 1.5rem;
   }
 }
 
@@ -224,16 +236,13 @@
     background: white;
   }
   
-  .booking-confirmation-container .bg-white {
+  .booking-summary-box,
+  .payment-section {
     box-shadow: none;
     border: 1px solid #000;
   }
   
-  .booking-confirmation-container button {
-    display: none;
-  }
-  
-  .booking-confirmation-container input[type="file"] {
+  .pay-now-btn {
     display: none;
   }
 }

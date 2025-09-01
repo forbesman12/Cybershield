@@ -1,0 +1,134 @@
+.site-footer {
+  background: #0e0e0e;
+  color: #fff;
+  padding: 50px 20px 20px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.footer-grid {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+}
+
+.footer-section {
+  line-height: 1.6;
+}
+
+.footer-logo {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.footer-text {
+  margin-top: 10px;
+  color: #aaa;
+}
+
+.footer-heading {
+  margin-bottom: 15px;
+  color: #fff;
+  font-weight: 500;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links li {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  color: #aaa;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #fff;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 15px;
+}
+
+.footer-socials a {
+  color: #fff;
+  font-size: 1.2rem;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.footer-socials a:hover {
+  transform: translateY(-3px);
+  color: #ffb400;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 40px;
+  border-top: 1px solid #222;
+  padding-top: 20px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+
+.whatsapp-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #25D366;
+  /* WhatsApp green */
+  color: white;
+  padding: 10px 15px;
+  border-radius: 30px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.whatsapp-float:hover {
+  background: #1ebe5b;
+}
+
+/* Email Signup Styles */
+.email-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 350px;
+}
+
+.email-input-field {
+  width: 100%;
+  padding: 10px 40px 10px 12px;
+  /* extra padding for the icon */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  font-size: 14px;
+}
+
+.email-icon {
+  position: absolute;
+  right: 12px;
+  color: #555;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.email-icon:hover {
+  color: #d6804d;
+  /* accent color */
+}

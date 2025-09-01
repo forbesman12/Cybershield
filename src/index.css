@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
+:root {
+  --accent: #d6804d;
+  --accent-dark: #b9683f;
+  --title: #1f2b3d;
+  --muted: #5b646f;
+}
 *{
   margin: 0;
   padding: 0;
@@ -20,12 +26,59 @@ a{
   padding-right: 10%;
 }
 .btn{
-  background: #FFF;
+  background: #FFF6EA;
   color: #212121;
   padding: 14px 25px;
   font-size: 16px;
-  border-radius: 30px;
+  border-radius: 20px;
   cursor: pointer;
   border: 0;
   outline: 0;
+}
+
+/* Global heading underline styles */
+h1, h2, h3, h4, h5, h6 {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+/* h1::after, h2::after, h3::after, h4::after, h5::after, h6::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(to right, var(--accent), var(--accent-dark));
+  border-radius: 2px;
+} */
+
+/* Centered underline for headings in centered containers */
+.text-center h1::after,
+.text-center h2::after,
+.text-center h3::after,
+.text-center h4::after,
+.text-center h5::after,
+.text-center h6::after,
+/* h1.text-center::after,
+h2.text-center::after,
+h3.text-center::after,
+h4.text-center::after,
+h5.text-center::after, */
+h6.text-center::after {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Responsive underline sizing */
+@media (max-width: 768px) {
+  h1::after, h2::after {
+    width: 50px;
+    height: 2px;
+  }
+  
+  h3::after, h4::after, h5::after, h6::after {
+    width: 40px;
+    height: 2px;
+  }
 }

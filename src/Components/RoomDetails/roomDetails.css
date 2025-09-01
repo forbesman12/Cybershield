@@ -1,0 +1,148 @@
+.heroRoomImage {
+  background-image: url('../../assets/images/L2.jpg');
+}
+
+/* Basic h1 styling */
+.detailSec .leftSec h1 {
+  font-size: 1.9rem;
+  font-weight: 200;
+  color: var(--title);
+  margin-bottom: 1rem;
+  font-family: 'Manrope', sans-serif;
+}
+
+/* Optional: Add the underline effect from your global styles */
+.detailSec .leftSec h1::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(to right, var(--accent), var(--accent-dark));
+  border-radius: 2px;
+}
+
+/* Container styling for better layout */
+.detailSec {
+  padding-inline: 10rem;
+  display: flex;
+  margin: 40px;
+  gap: 30px;
+}
+
+
+.leftSec {
+  flex: 2;
+  min-width: 0;
+}
+
+.rightSec {
+  flex: 1;
+}
+
+.leftSec {
+  flex: 1;
+  border: 1px solid red;
+  max-width: 100%;
+}
+
+/* flex list styling  */
+
+.leftSec ul {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  /* spacing between items */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-wrap: nowrap;
+  /* prevent wrapping */
+  overflow-x: auto;
+  /* allow scrolling if too long */
+}
+
+.leftSec li {
+  font-size: 1rem;
+  color: grey;
+  position: relative;
+  padding-left: 1.3rem;
+  white-space: nowrap;
+  /* ✅ prevent text from breaking into multiple lines */
+}
+
+.leftSec li::before {
+  content: "✔";
+  position: absolute;
+  left: 0;
+  color: #000;
+  font-size: 0.9rem;
+}
+
+.leftSec img {
+  width: 100%;
+  max-height: 410px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.thumbnails {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  border: 2px solid blue;
+  /* outer container border */
+  padding: 8px;
+  /* space between container border & thumbnails */
+  border-radius: 6px;
+  justify-content: flex-start;
+}
+
+.thumbnail {
+  width: 80px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 5px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  /* ✅ keeps border inside thumbnail size */
+  border: 2px solid transparent;
+  /* default so no shift */
+}
+
+.thumbnail:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.thumbnail.active {
+  border: 2px solid #ff5a5f;
+  /* active highlight stays inside */
+  opacity: 1;
+}
+
+
+
+/* Reservation Box */
+
+
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .detailSec {
+    flex-direction: column;
+    padding: 2rem 5%;
+  }
+
+  .detailSec .leftSec h1 {
+    font-size: 2rem;
+  }
+
+  .detailSec .leftSec h1::after {
+    width: 50px;
+    height: 2px;
+  }
+}

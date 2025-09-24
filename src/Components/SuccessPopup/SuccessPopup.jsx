@@ -20,7 +20,7 @@ const SuccessPopup = ({
 
       return () => clearTimeout(timer);
     }
-  }, [isVisible, autoCloseDelay]);
+  }, [isVisible, autoCloseDelay, onClose]); // Added onClose to dependencies
 
   const handleClose = () => {
     setIsAnimating(false);

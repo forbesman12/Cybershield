@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// Removed unused import: import { useNavigate } from 'react-router-dom';
 
 const BookingContext = createContext();
 
@@ -40,7 +40,10 @@ export const BookingProvider = ({ children }) => {
       
       if (!response.ok) {
         // Handle specific API errors
-        if (responseData.errors) {
+        if (responseData.error === 'ROOM_UNAVAILABLE') {
+          // Handle room unavailability with user-friendly message
+          throw new Error(responseData.message || 'This room is already booked and paid for these dates.');
+        } else if (responseData.errors) {
           // Validation errors from the API
           const errorMessages = Array.isArray(responseData.errors) 
             ? responseData.errors.join(', ')
@@ -52,6 +55,13 @@ export const BookingProvider = ({ children }) => {
         } else {
           throw new Error(`HTTP Error: ${response.status}`);
         }
+      }
+      
+      // Log the successful booking creation with new backend response format
+      if (responseData.success && responseData.data.bookingId) {
+        console.log('Booking created with token system. Booking ID:', responseData.data.bookingId);
+        console.log('Booking Reference:', responseData.data.bookingReference);
+        console.log('User will receive email with access link.');
       }
       
       // Success handling

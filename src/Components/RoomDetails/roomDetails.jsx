@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+// Removed unused import: useNavigate
 import "./roomDetails.css";
 import { roomsData } from "../Models/roomsData";
 import Navbar from "../Homepage/Navbar/Navbar";
 import Footer from "../Homepage/Footer/Footer";
 import BookingForm from "../BookingForm/BookingForm";
+import SEOHead from '../SEO/SEOHead';
+import { getRoomStructuredData } from '../SEO/structuredData';
 import {
   FaSnowflake,
   FaShieldAlt,
@@ -16,9 +19,9 @@ import {
   FaUsers,
   FaCouch,
 } from "react-icons/fa";
+import { FaStairs } from "react-icons/fa6";
 
 const RoomDetail = () => {
-  const navigate = useNavigate();
 
   // ✅ Map utilities to icons
   const utilityIcons = {
@@ -33,6 +36,7 @@ const RoomDetail = () => {
     Security: <FaShieldAlt size={28} color="#000" />,
     Parking: <FaParking size={28} color="#000" />,
     "Sitting Room": <FaCouch size={28} color="#000" />,
+    "Stairs": <FaStairs size={28} color="#000" />,
     "1 Bed": <FaBed size={28} color="#000" />,
     "2 Bed": <FaBed size={28} color="#000" />,
     "2 Guests": <FaUsers size={28} color="#000" />,
@@ -58,14 +62,28 @@ const RoomDetail = () => {
     // You can add additional logic here if needed
   };
 
+  // Generate SEO data for this specific room
+  const roomStructuredData = getRoomStructuredData(room);
+  const seoTitle = `${room.name} - De-Hilltop Hotel | Room Details & Booking`;
+  const seoDescription = `Book ${room.name} at De-Hilltop Hotel in Okpanam, Asaba. ${room.description || 'Comfortable accommodation with modern amenities.'} Starting from ${room.price}.`;
+  const seoKeywords = `${room.name}, hotel room booking, De-Hilltop rooms, ${room.tags || ''}, Okpanam hotel, Asaba accommodation`;
+
   return (
     <>
+      <SEOHead 
+        title={seoTitle}
+        description={seoDescription}
+        keywords={seoKeywords}
+        canonicalUrl={`https://de-hilltop.com/rooms/${room.id}`}
+        structuredData={roomStructuredData}
+        ogImage={room.image || '/assets/IMG_0104.jpg'}
+      />
       <Navbar />
       <div
         className="heroRoomImage"
         style={{
           backgroundImage: `url(${room.image})`,
-          height: "45vh",
+          height: "55vh",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -121,6 +139,7 @@ const RoomDetail = () => {
               ))}
             </div>
           </div>
+          
         </div>
 
         {/* Booking Form */}

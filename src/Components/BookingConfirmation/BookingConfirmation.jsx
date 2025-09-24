@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './BookingConfirmation.css';
+import Navbar from '../Homepage/Navbar/Navbar';
 
 const BookingConfirmation = () => {
   const [paymentFile, setPaymentFile] = useState(null);
@@ -9,32 +10,46 @@ const BookingConfirmation = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [bookingReference, setBookingReference] = useState('');
   const fileInputRef = useRef(null);
-  
+
   const { state } = useLocation();
   const navigate = useNavigate();
 
   // Extract booking details from location state
   const {
-    roomId = state?.roomId || '',
+    // roomId = state?.roomId || '', // Unused variable
     roomName = state?.roomName || 'Deluxe Room',
-    price = state?.price || 150,
+    price = state?.price || '₦150,000 / night', // Keep as string for display
+    totalAmount = state?.totalAmount || 0, // Use the calculated total amount
     name = state?.name || 'John',
     surname = state?.surname || 'Doe',
     email = state?.email || 'john.doe@example.com',
-    address = state?.address || '123 Main St, City',
+    // address = state?.address || '123 Main St, City', // Unused variable
     checkIn = state?.checkIn || new Date().toISOString().split('T')[0],
     checkOut = state?.checkOut || new Date(Date.now() + 86400000).toISOString().split('T')[0],
     adults = state?.adults || 2,
     children = state?.children || 0,
   } = state || {};
 
-  // Calculate total price based on number of nights
+  // Calculate nights and format total price
   const checkInDate = new Date(checkIn);
   const checkOutDate = new Date(checkOut);
-  const nights = checkOutDate && checkInDate 
+  const nights = checkOutDate && checkInDate
     ? Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24))
     : 1;
-  const totalPrice = nights > 0 ? (price * nights).toFixed(2) : '0.00';
+
+  // Use the totalAmount passed from the booking form, formatted for display
+  const formattedTotalAmount = totalAmount ? `₦${totalAmount.toLocaleString()}` : '₦300,000';
+
+  // Extract numeric price per night for display
+  const getPricePerNight = () => {
+    if (typeof price === 'string') {
+      const match = price.match(/₦?([0-9,]+)/);
+      if (match) {
+        return `₦${parseInt(match[1].replace(/,/g, '')).toLocaleString()}`;
+      }
+    }
+    return totalAmount && nights ? `₦${Math.round(totalAmount / nights).toLocaleString()}` : '₦150,000';
+  };
 
   // Generate booking reference
   React.useEffect(() => {
@@ -43,11 +58,11 @@ const BookingConfirmation = () => {
       const randomStr = Math.random().toString(36).substring(2, 6).toUpperCase();
       return `BK${timestamp}${randomStr}`;
     };
-    
+
     if (!bookingReference) {
       setBookingReference(generateReference());
     }
-  }, []);
+  }, [bookingReference]); // Added bookingReference to dependencies
 
   // Static bank account details
   const bankDetails = {
@@ -62,15 +77,15 @@ const BookingConfirmation = () => {
   const validateFile = (file) => {
     const maxSize = 5 * 1024 * 1024; // 5MB
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'application/pdf'];
-    
+
     if (file.size > maxSize) {
       return { valid: false, error: 'File size must be less than 5MB' };
     }
-    
+
     if (!allowedTypes.includes(file.type)) {
       return { valid: false, error: 'Only images (JPEG, PNG, GIF) and PDF files are allowed' };
     }
-    
+
     return { valid: true };
   };
 
@@ -103,12 +118,10 @@ const BookingConfirmation = () => {
       const formData = new FormData();
       formData.append('paymentProof', paymentFile);
       formData.append('bookingReference', bookingReference);
-      formData.append('totalAmount', totalPrice);
+      formData.append('totalAmount', totalAmount);
       formData.append('guestName', `${name} ${surname}`);
       formData.append('guestEmail', email);
 
-      // Simulate API call for uploading payment proof
-      // Replace this with your actual API endpoint
       const response = await axios.post('/api/payment-proof', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -116,14 +129,13 @@ const BookingConfirmation = () => {
       });
 
       if (response.data.success) {
-        setUploadStatus('Payment proof uploaded successfully! We will review and confirm your booking within 24 hours.');
-        // Optionally navigate to success page
+        setUploadStatus('Payment proof uploaded successfully! We will review and confirm your booking within 2 hours.');
         setTimeout(() => {
-          navigate('/booking-success', { 
-            state: { 
-              bookingReference, 
-              message: 'Payment proof uploaded successfully' 
-            } 
+          navigate('/booking-success', {
+            state: {
+              bookingReference,
+              message: 'Payment proof uploaded successfully'
+            }
           });
         }, 3000);
       } else {
@@ -147,212 +159,241 @@ const BookingConfirmation = () => {
   };
 
   return (
-    <div className="booking-confirmation-container">
-      <div className="container mx-auto p-6 max-w-4xl">
-        <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">Booking Confirmation</h1>
+    <>
+      <Navbar />
+      <div style={{ margin: '70px'}}>
+        <div style={{ padding: '1.5rem', maxWidth: '100%',}}>
+          <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', textAlign: 'center', marginBottom: '2rem', color: '#1f2937' }}>
+            Booking Confirmation
+          </h1>
 
-        {/* Booking Summary Section */}
-        <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800 border-b pb-2">Booking Summary</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="space-y-3">
-              <div className="flex justify-between py-2 border-b border-gray-100">
-                <span className="font-medium text-gray-600">Room Type:</span>
-                <span className="text-gray-800">{roomName}</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-gray-100">
-                <span className="font-medium text-gray-600">Check-in:</span>
-                <span className="text-gray-800">{new Date(checkIn).toLocaleDateString()}</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-gray-100">
-                <span className="font-medium text-gray-600">Check-out:</span>
-                <span className="text-gray-800">{new Date(checkOut).toLocaleDateString()}</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-gray-100">
-                <span className="font-medium text-gray-600">Nights:</span>
-                <span className="text-gray-800">{nights}</span>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <div className="flex justify-between py-2 border-b border-gray-100">
-                <span className="font-medium text-gray-600">Adults:</span>
-                <span className="text-gray-800">{adults}</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-gray-100">
-                <span className="font-medium text-gray-600">Children:</span>
-                <span className="text-gray-800">{children}</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-gray-100">
-                <span className="font-medium text-gray-600">Guest Name:</span>
-                <span className="text-gray-800">{`${name} ${surname}`}</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-gray-100">
-                <span className="font-medium text-gray-600">Email:</span>
-                <span className="text-gray-800 text-sm">{email}</span>
-              </div>
-            </div>
-          </div>
-          <div className="mt-6 pt-4 border-t border-gray-200">
-            <div className="flex justify-between items-center">
-              <div>
-                <span className="text-xl font-semibold text-gray-800">Total Amount:</span>
-                <p className="text-sm text-gray-600">({nights} nights × ${price} per night)</p>
-              </div>
-              <span className="text-2xl font-bold text-green-600">${totalPrice}</span>
-            </div>
-            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-              <div className="flex justify-between items-center">
-                <span className="font-semibold text-blue-800">Booking Reference:</span>
-                <span className="text-lg font-mono bg-blue-100 px-3 py-1 rounded text-blue-800">{bookingReference}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bank Account Details Section */}
-        <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800 border-b pb-2">Bank Transfer Details</h2>
-          <div className="bg-gray-50 p-4 rounded-lg mb-4">
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-3">
-                <div>
-                  <span className="block text-sm font-medium text-gray-600">Bank Name:</span>
-                  <span className="text-lg font-semibold text-gray-800">{bankDetails.bank}</span>
-                </div>
-                <div>
-                  <span className="block text-sm font-medium text-gray-600">Account Name:</span>
-                  <span className="text-lg font-semibold text-gray-800">{bankDetails.accountName}</span>
-                </div>
-              </div>
-              <div className="space-y-3">
-                <div>
-                  <span className="block text-sm font-medium text-gray-600">Account Number:</span>
-                  <span className="text-lg font-mono font-semibold text-gray-800">{bankDetails.accountNumber}</span>
-                </div>
-                <div>
-                  <span className="block text-sm font-medium text-gray-600">Routing Number:</span>
-                  <span className="text-lg font-mono font-semibold text-gray-800">{bankDetails.routing}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Important Instructions */}
-          <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
-            <div className="flex">
-              <div className="ml-3">
-                <h3 className="text-lg font-semibold text-red-800">⚠️ IMPORTANT PAYMENT INSTRUCTIONS</h3>
-                <div className="mt-2 text-red-700">
-                  <p className="font-medium mb-2">When making your bank transfer, you MUST:</p>
-                  <ul className="list-disc list-inside space-y-1">
-                    <li><strong>Include your booking reference ({bookingReference}) in the payment description/memo field</strong></li>
-                    <li>Transfer the exact amount: <strong>${totalPrice}</strong></li>
-                    <li>Upload proof of payment below after completing the transfer</li>
-                  </ul>
-                  <p className="mt-3 text-sm"><strong>Note:</strong> Payments without the correct reference may cause delays in processing your booking.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Payment Proof Upload Section */}
-        <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800 border-b pb-2">Upload Proof of Payment</h2>
-          
-          <div className="mb-4 p-4 bg-blue-50 rounded-lg">
-            <h3 className="font-semibold text-blue-800 mb-2">📋 Upload Requirements:</h3>
-            <ul className="text-sm text-blue-700 space-y-1">
-              <li>• File types: Images (JPEG, PNG, GIF) or PDF documents only</li>
-              <li>• Maximum file size: 5MB</li>
-              <li>• Upload a clear screenshot or photo of your bank transfer receipt</li>
-              <li>• Ensure the booking reference <strong>({bookingReference})</strong> is visible in the transfer details</li>
-            </ul>
-          </div>
-
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Select Payment Proof File:
-              </label>
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                accept="image/*,.pdf"
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-gray-300 rounded-lg cursor-pointer"
-              />
-            </div>
-
-            {paymentFile && (
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-700">Selected file:</p>
-                    <p className="text-sm text-gray-600">{paymentFile.name}</p>
-                    <p className="text-xs text-gray-500">Size: {(paymentFile.size / 1024 / 1024).toFixed(2)} MB</p>
+          {/* Booking Summary Section */}
+          <div className="flex" style={{ display: 'flex', justifyContent: "space-between", gap: '1.5rem', flexWrap: 'wrap' }}>
+            <div style={{flex: 1, backgroundColor: '#ffffff', padding: '1.5rem', borderRadius: '0.5rem', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', marginBottom: '1.5rem' }}>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: '600', marginBottom: '1rem', color: '#1f2937', borderBottom: '1px solid #e5e7eb', paddingBottom: '0.5rem' }}>
+                Booking Summary
+              </h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+                <div style={{ marginBottom: '0.75rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #f3f4f6' }}>
+                    <span style={{ fontWeight: '500', color: '#4b5563' }}>Room Type:</span>
+                    <span style={{ color: '#1f2937' }}>{roomName}</span>
                   </div>
-                  <button
-                    onClick={removeFile}
-                    className="text-red-600 hover:text-red-800 text-sm font-medium"
-                  >
-                    Remove
-                  </button>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #f3f4f6' }}>
+                    <span style={{ fontWeight: '500', color: '#4b5563' }}>Check-in:</span>
+                    <span style={{ color: '#1f2937' }}>{new Date(checkIn).toLocaleDateString()}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #f3f4f6' }}>
+                    <span style={{ fontWeight: '500', color: '#4b5563' }}>Check-out:</span>
+                    <span style={{ color: '#1f2937' }}>{new Date(checkOut).toLocaleDateString()}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #f3f4f6' }}>
+                    <span style={{ fontWeight: '500', color: '#4b5563' }}>Nights:</span>
+                    <span style={{ color: '#1f2937' }}>{nights}</span>
+                  </div>
+                </div>
+                <div style={{ marginBottom: '0.75rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #f3f4f6' }}>
+                    <span style={{ fontWeight: '500', color: '#4b5563' }}>Adults:</span>
+                    <span style={{ color: '#1f2937' }}>{adults}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #f3f4f6' }}>
+                    <span style={{ fontWeight: '500', color: '#4b5563' }}>Children:</span>
+                    <span style={{ color: '#1f2937' }}>{children}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #f3f4f6' }}>
+                    <span style={{ fontWeight: '500', color: '#4b5563' }}>Guest Name:</span>
+                    <span style={{ color: '#1f2937' }}>{`${name} ${surname}`}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #f3f4f6' }}>
+                    <span style={{ fontWeight: '500', color: '#4b5563' }}>Email:</span>
+                    <span style={{ color: '#1f2937', fontSize: '0.875rem' }}>{email}</span>
+                  </div>
                 </div>
               </div>
-            )}
-
-            <button
-              onClick={handleUploadPaymentProof}
-              disabled={!paymentFile || isUploading}
-              className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${
-                !paymentFile || isUploading
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-green-600 text-white hover:bg-green-700'
-              }`}
-            >
-              {isUploading ? (
-                <span className="flex items-center justify-center">
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Uploading...
-                </span>
-              ) : (
-                'Upload Payment Proof'
-              )}
-            </button>
-
-            {uploadStatus && (
-              <div className={`p-4 rounded-lg ${
-                uploadStatus.includes('successfully') 
-                  ? 'bg-green-50 text-green-800 border border-green-200' 
-                  : uploadStatus.includes('failed') || uploadStatus.includes('error')
-                  ? 'bg-red-50 text-red-800 border border-red-200'
-                  : 'bg-blue-50 text-blue-800 border border-blue-200'
-              }`}>
-                <p className="text-sm font-medium">{uploadStatus}</p>
+              <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #e5e7eb' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <span style={{ fontSize: '1.25rem', fontWeight: '600', color: '#1f2937' }}>Total Amount:</span>
+                    <p style={{ fontSize: '0.875rem', color: '#4b5563' }}>({nights} nights × {getPricePerNight()} per night)</p>
+                  </div>
+                  <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#16a34a' }}>{formattedTotalAmount}</span>
+                </div>
+                <div style={{ marginTop: '1rem', padding: '0.75rem', backgroundColor: '#eff6ff', borderRadius: '0.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontWeight: '600', color: '#1e40af' }}>Booking Reference:</span>
+                    <span style={{ fontSize: '1.125rem', fontFamily: 'monospace', backgroundColor: '#dbeafe', padding: '0.25rem 0.75rem', borderRadius: '0.25rem', color: '#1e40af' }}>
+                      {bookingReference}
+                    </span>
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
-        </div>
+            </div>
 
-        {/* Additional Instructions */}
-        <div className="bg-yellow-50 p-6 rounded-lg shadow-lg">
-          <h3 className="text-lg font-semibold text-yellow-800 mb-3">📞 Need Help?</h3>
-          <div className="text-yellow-700 space-y-2 text-sm">
-            <p>If you encounter any issues with your payment or upload:</p>
-            <ul className="list-disc list-inside space-y-1 ml-4">
-              <li>Email us at: <strong>bookings@cybertrace.com</strong></li>
-              <li>Call us at: <strong>+1 (555) 123-4567</strong></li>
-              <li>Include your booking reference: <strong>{bookingReference}</strong></li>
-            </ul>
-            <p className="mt-3"><strong>Processing Time:</strong> We will review your payment proof within 24 hours and send you a confirmation email once verified.</p>
+            {/* Bank Account Details Section */}
+            <div style={{flex:1, backgroundColor: '#ffffff', padding: '1.5rem', borderRadius: '0.5rem', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', marginBottom: '1.5rem' }}>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: '600', marginBottom: '1rem', color: '#1f2937', borderBottom: '1px solid #e5e7eb', paddingBottom: '0.5rem' }}>
+                Bank Transfer Details
+              </h2>
+              <div style={{ backgroundColor: '#f9fafb', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+                  <div style={{ marginBottom: '0.75rem' }}>
+                    <div>
+                      <span style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563' }}>Bank Name:</span>
+                      <span style={{ fontSize: '1.125rem', fontWeight: '600', color: '#1f2937' }}>{bankDetails.bank}</span>
+                    </div>
+                    <div>
+                      <span style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563' }}>Account Name:</span>
+                      <span style={{ fontSize: '1.125rem', fontWeight: '600', color: '#1f2937' }}>{bankDetails.accountName}</span>
+                    </div>
+                  </div>
+                  <div style={{ marginBottom: '0.75rem' }}>
+                    <div>
+                      <span style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563' }}>Account Number:</span>
+                      <span style={{ fontSize: '1.125rem', fontFamily: 'monospace', fontWeight: '600', color: '#1f2937' }}>{bankDetails.accountNumber}</span>
+                    </div>
+                    <div>
+                      <span style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4b5563' }}>Routing Number:</span>
+                      <span style={{ fontSize: '1.125rem', fontFamily: 'monospace', fontWeight: '600', color: '#1f2937' }}>{bankDetails.routing}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+             </div>
+            {/* Important Instructions */}
+            <div style={{ backgroundColor: '#fef2f2', borderLeft: '4px solid #ef4444', padding: '1rem', marginBottom: '1rem' }}>
+              <div style={{ display: 'flex' }}>
+                <div style={{ marginLeft: '0.75rem' }}>
+                  <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#991b1b' }}>⚠️ IMPORTANT PAYMENT INSTRUCTIONS</h3>
+                  <div style={{ marginTop: '0.5rem', color: '#b91c1c' }}>
+                    <p style={{ fontWeight: '500', marginBottom: '0.5rem' }}>When making your bank transfer, you MUST:</p>
+                    <ul style={{ listStyleType: 'disc', paddingLeft: '1.25rem', marginBottom: '0.25rem' }}>
+                      <li><strong>Include your booking reference ({bookingReference}) in the payment description/memo field</strong></li>
+                      <li>Transfer the exact amount: <strong>{formattedTotalAmount}</strong></li>
+                      <li>Upload proof of payment below after completing the transfer</li>
+                    </ul>
+                    <p style={{ marginTop: '0.75rem', fontSize: '0.875rem' }}><strong>Note:</strong> Payments without the correct reference may cause delays in processing your booking.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+         
+
+          {/* Payment Proof Upload Section */}
+          <div style={{ backgroundColor: '#ffffff', padding: '1.5rem', borderRadius: '0.5rem', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', marginBottom: '1.5rem' }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: '600', marginBottom: '1rem', color: '#1f2937', borderBottom: '1px solid #e5e7eb', paddingBottom: '0.5rem' }}>
+              Upload Proof of Payment
+            </h2>
+
+            <div style={{ marginBottom: '1rem', padding: '1rem', backgroundColor: '#eff6ff', borderRadius: '0.5rem' }}>
+              <h3 style={{ fontWeight: '600', color: '#1e40af', marginBottom: '0.5rem' }}>📋 Upload Requirements:</h3>
+              <ul style={{ fontSize: '0.875rem', color: '#1e40af', marginBottom: '0.25rem' }}>
+                <li>File types: Images (JPEG, PNG, GIF) or PDF documents only</li>
+                <li>Maximum file size: 5MB</li>
+                <li>Upload a clear screenshot or photo of your bank transfer receipt</li>
+                <li>Ensure the booking reference <strong>({bookingReference})</strong> is visible in the transfer details</li>
+              </ul>
+            </div>
+
+            <div style={{ marginBottom: '1rem' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
+                  Select Payment Proof File:
+                </label>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  accept="image/*,.pdf"
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    fontSize: '0.875rem',
+                    color: '#6b7280',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '0.5rem',
+                    cursor: 'pointer',
+                  }}
+                  className="file-input" // Keep class for any custom CSS in BookingConfirmation.css
+                />
+              </div>
+
+              {paymentFile && (
+                <div style={{ padding: '1rem', backgroundColor: '#f9fafb', borderRadius: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div>
+                      <p style={{ fontSize: '0.875rem', fontWeight: '500', color: '#374151' }}>Selected file:</p>
+                      <p style={{ fontSize: '0.875rem', color: '#6b7280' }}>{paymentFile.name}</p>
+                      <p style={{ fontSize: '0.75rem', color: '#6b7280' }}>Size: {(paymentFile.size / 1024 / 1024).toFixed(2)} MB</p>
+                    </div>
+                    <button
+                      onClick={removeFile}
+                      style={{ color: '#dc2626', fontSize: '0.875rem', fontWeight: '500' }}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <button
+                onClick={handleUploadPaymentProof}
+                disabled={!paymentFile || isUploading}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '0.5rem',
+                  fontWeight: '600',
+                  // Removed transition: 'background-color 0.2s',
+                  ...(paymentFile && !isUploading
+                    ? { backgroundColor: '#16a34a', color: '#ffffff', cursor: 'pointer' }
+                    : { backgroundColor: '#d1d5db', color: '#6b7280', cursor: 'not-allowed' })
+                }}
+              >
+                {isUploading ? (
+                  <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg style={{ /* Removed animation: 'spin 1s linear infinite', */ marginRight: '0.75rem', height: '1.25rem', width: '1.25rem', color: '#ffffff' }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Uploading...
+                  </span>
+                ) : (
+                  'Upload Payment Proof'
+                )}
+              </button>
+
+              {uploadStatus && (
+                <div style={{
+                  padding: '1rem',
+                  borderRadius: '0.5rem',
+                  border: `1px solid ${uploadStatus.includes('successfully') ? '#dcfce7' : uploadStatus.includes('failed') || uploadStatus.includes('error') ? '#fee2e2' : '#dbeafe'}`,
+                  backgroundColor: uploadStatus.includes('successfully') ? '#f0fdf4' : uploadStatus.includes('failed') || uploadStatus.includes('error') ? '#fef2f2' : '#eff6ff',
+                  color: uploadStatus.includes('successfully') ? '#166534' : uploadStatus.includes('failed') || uploadStatus.includes('error') ? '#b91c1c' : '#1e40af'
+                }}>
+                  <p style={{ fontSize: '0.875rem', fontWeight: '500' }}>{uploadStatus}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Additional Instructions */}
+          <div style={{ backgroundColor: '#fefce8', padding: '1.5rem', borderRadius: '0.5rem', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
+            <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#854d0e', marginBottom: '0.75rem' }}>📞 Need Help?</h3>
+            <div style={{ color: '#713f12', marginBottom: '0.5rem', fontSize: '0.875rem' }}>
+              <p>If you encounter any issues with your payment or upload:</p>
+              <ul style={{ listStyleType: 'disc', paddingLeft: '1.25rem', marginLeft: '1rem' }}>
+                <li>Email us at: <strong>bookings@cybertrace.com</strong></li>
+                <li>Call us at: <strong>+1 (555) 123-4567</strong></li>
+                <li>Include your booking reference: <strong>{bookingReference}</strong></li>
+              </ul>
+              <p style={{ marginTop: '0.75rem' }}><strong>Processing Time:</strong> We will review your payment proof within 24 hours and send you a confirmation email once verified.</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

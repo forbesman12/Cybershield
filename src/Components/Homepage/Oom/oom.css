@@ -1,5 +1,6 @@
 .rooms-section {
-  padding: 40px;
+  padding-block: 40px;
+  padding-inline: 10rem;
   background: #f8f8f8;
   font-family: "Arial", sans-serif;
 }
@@ -36,32 +37,69 @@
 
 .rooms-cards {
   display: flex;
-  gap: 20px;
+  gap: 30px;
   margin-top: 20px;
+  opacity: 0; /* Start invisible for section fade-in */
+  transition: opacity 0.6s ease-out;
+}
+
+.rooms-cards.visible {
+  opacity: 1;
 }
 
 .room-card {
   background: #fff;
   border-radius: 12px;
+  padding: 0px;
   overflow: hidden;
   flex: 1;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
+  opacity: 0; /* Start invisible */
+  transform: scale(0.95); /* Start slightly scaled down */
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* Smooth fade and scale */
+}
+
+.room-card.visible {
+  opacity: 1;
+  transform: scale(1); /* Scale to normal size */
+}
+
+/* Staggered delays for each card */
+.room-card:nth-child(1).visible {
+  transition-delay: 0.1s;
+}
+
+.room-card:nth-child(2).visible {
+  transition-delay: 0.2s;
+}
+
+.room-card:nth-child(3).visible {
+  transition-delay: 0.3s;
 }
 
 .room-image img {
   width: 100%;
-  height: 265px;
+  height: 35vh;
   object-fit: cover;
 }
 
 .room-info {
-  padding: 15px;
+  padding: 25px;
+}
+
+.room-info li {
+  list-style: none;
+  text-align: start;
+  font-size: 14px;
+  opacity: 0.9;
+  font-weight: 200;
+  margin-bottom: 15px;
 }
 
 .room-info h3 {
-  font-weight: 500;
+  font-weight: 300;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -73,8 +111,15 @@
   margin: 10px 0;
 }
 
+.room-price {
+  font-size: 1.2rem;
+  text-align: start;
+  font-weight: 200;
+  margin-bottom: 15px;
+}
+
 .view-rates-btn {
-  background: #6c5c54;
+  background: #000;
   color: #fff;
   padding: 8px 16px;
   border: none;
@@ -88,7 +133,177 @@
   background: #5b4c45;
 }
 
-.ins{
+.ins {
   display: flex;
-  justify-content: space-around;
+  font-weight: 100;
+  opacity: 0.7;
+  gap: 30px;
+}
+
+
+
+
+
+
+
+
+/* Larger tablets (769px–1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .rooms-section {
+    padding: 30px; /* Moderate padding */
+  }
+
+  .rooms-header {
+    flex-direction: row; /* Keep horizontal layout for larger tablets */
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .rooms-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .rooms-nav {
+    width: auto; /* Allow nav to fit content */
+    gap: 12px;
+  }
+
+  .progress-bar {
+    width: 120px;
+  }
+
+  .rooms-cards {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 2-column grid */
+    gap: 25px;
+  }
+
+  .room-image img {
+    height: 220px; /* Slightly smaller images */
+  }
+
+  .room-info {
+    padding: 20px;
+  }
+
+  .room-info li {
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+
+  .room-price {
+    font-size: 1.2rem;
+  }
+
+  .view-rates-btn {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+
+  .ins {
+    gap: 25px;
+  }
+}
+
+/* Tablets and large mobile (≤768px) */
+@media (max-width: 768px) {
+  .rooms-section {
+    padding: 20px;
+  }
+
+  .rooms-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .rooms-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .rooms-nav {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .progress-bar {
+    width: 100px;
+  }
+
+  .rooms-cards {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .room-card {
+    width: 100%;
+  }
+
+  .room-image img {
+    height: 200px; /* Consistent height */
+  }
+
+  .room-info {
+    padding: 20px;
+  }
+
+  .room-info li {
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+
+  .room-price {
+    font-size: 1.1rem;
+  }
+
+  .view-rates-btn {
+    font-size: 0.85rem;
+    padding: 7px 14px;
+  }
+
+  .ins {
+    gap: 20px;
+  }
+}
+
+/* Small mobile (≤480px) */
+@media (max-width: 480px) {
+  .rooms-section {
+    padding: 15px;
+  }
+
+  .rooms-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .progress-bar {
+    width: 80px;
+  }
+
+  .room-image img {
+    height: 180px; /* Smaller for mobile */
+  }
+
+  .room-info {
+    padding: 15px;
+  }
+
+  .room-info li {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
+  .room-price {
+    font-size: 1rem;
+  }
+
+  .view-rates-btn {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+
+  .ins {
+    flex-direction: column;
+    gap: 15px;
+  }
 }

@@ -1,16 +1,65 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import './detail.css';
+import { useNavigate } from 'react-router-dom';
 import { FaCalendarCheck, FaWifi, FaTags, FaBed } from "react-icons/fa";
-import Img8 from '../../../assets/IMG_0107.png';
-import Img9 from '../../../assets/IMG_0068.png';
-import img6 from '../../../assets/IMG_0104.png';
-import img7 from '../../../assets/IMG_0068.png';
+import Img8 from '../../../assets/IMG_0107.jpg';
 
 const Detail = () => {
+  const whyChooseUsRef = useRef(null);
+  const aboutSectionRef = useRef(null);
+ const navigate = useNavigate();
+
+  useEffect(() => {
+    // Observer for #why-choose-us
+    const whyChooseUs = whyChooseUsRef.current;
+    const tags = whyChooseUs?.querySelectorAll('.tag');
+
+    const whyChooseUsObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          whyChooseUs.classList.add('visible');
+          tags.forEach(tag => tag.classList.add('visible'));
+        } else {
+          whyChooseUs.classList.remove('visible');
+          tags.forEach(tag => tag.classList.remove('visible'));
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (whyChooseUs) whyChooseUsObserver.observe(whyChooseUs);
+
+    // Observer for about-section
+    const aboutSection = aboutSectionRef.current;
+    const aboutContent = aboutSection?.querySelector('.about-content');
+    const hilltop = aboutSection?.querySelector('.hilltop');
+
+    const aboutObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          aboutSection.classList.add('visible');
+          aboutContent.classList.add('visible');
+          hilltop.classList.add('visible');
+        } else {
+          aboutSection.classList.remove('visible');
+          aboutContent.classList.remove('visible');
+          hilltop.classList.remove('visible');
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (aboutSection) aboutObserver.observe(aboutSection);
+
+    return () => {
+      if (whyChooseUs) whyChooseUsObserver.disconnect();
+      if (aboutSection) aboutObserver.disconnect();
+    };
+  }, []);
+
   return (
     <>
-
-      <section id='why-choose-us' className="tags">
+      <section id='why-choose-us' className="tags" ref={whyChooseUsRef}>
         <div className="easyBooking tag">
           <div className="icons">
             <FaCalendarCheck size={30} />
@@ -34,7 +83,7 @@ const Detail = () => {
             <FaTags size={30} />
           </div>
           <div className="text">
-            Experience premium comfort at<br />a price  that fits your budget.
+            Experience premium comfort at<br />a price that fits your budget.
           </div>
         </div>
 
@@ -46,9 +95,9 @@ const Detail = () => {
             Relax in our spacious, <br />well-furnished, and cozy <br />rooms.
           </div>
         </div>
-
       </section>
-      <section className="about-section">
+
+      <section className="about-section" ref={aboutSectionRef}>
         <div className="about-content">
           <h4 className="section-subtitle">ABOUT DE-HILLTOP APARTMENTS & HOTEL</h4>
           <h1 className="section-title">The Hilltop Experience</h1>
@@ -64,21 +113,11 @@ const Detail = () => {
             safe, clean, and welcoming environment. Your comfort and well-being
             are always our top priority.
           </p>
-          <button className="learn-more-btn">LEARN MORE</button>
+          <button className="bttn" onClick={() => { navigate('/about'); setMenuOpen(false); }}>Learn More</button>
         </div>
-        <div className="hilltop" style={{ backgroundImage: `url(${Img8})` }}
-          aria-hidden="true"
-        />
+        <div className="hilltop" style={{ backgroundImage: `url(${Img8})` }} aria-hidden="true" />
       </section>
-
-      {/* 
-      <section className='about-container'>
-        <h1>Welcome to De-Hilltop Apartments and Hotel</h1>
-        <p>"Nestled in the heart of Okpanam Asaba, De-Hilltop Apartments and Hotel offers a seamless blend<br />of modern elegance, world-class comfort, and unmatched hospitality. From our tastefully<br /> designed rooms to our exclusive amenities, every detail is crafted to give you an unforgettable stay." <a href="">...read more</a></p>
-      </section> */}
-
     </>
-
   );
 };
 

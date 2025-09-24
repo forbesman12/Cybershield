@@ -1,44 +1,62 @@
-import React, { useState } from 'react';
-import './aboutPage.css'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import Navbar from '../Homepage/Navbar/Navbar'
-
-// Images
-import Img9 from '../../assets/IMG_0068.png';
-import img6 from '../../assets/IMG_0070.png';
-import img7 from '../../assets/IMG_0104.png';
+import React, { useEffect, useRef } from 'react';
+import './aboutPage.css';
+import GoogleMaps from '../GoogleMaps/GoogleMaps';
+import Navbar from '../Homepage/Navbar/Navbar';
 import Footer from '../Homepage/Footer/Footer';
+import Img4 from '../../assets/IMG_0104.jpg';
+import SEOHead from '../SEO/SEOHead';
+import { getLocalBusinessStructuredData } from '../SEO/structuredData';
 
 const AboutPage = () => {
-  const [current, setCurrent] = useState(0);
-  const slides = [Img9, img6, img7];
+  const aboutImageRef = useRef(null);
 
-  const nextSlide = () => {
-    setCurrent((prev) => (prev + 1) % slides.length);
-  };
+  useEffect(() => {
+    const aboutImage = aboutImageRef.current;
+    const image = aboutImage?.querySelector('.aboutimage-image');
+    const text = aboutImage?.querySelector('.aboutimage-text');
 
-  const prevSlide = () => {
-    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
-  };
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          aboutImage.classList.add('visible');
+          image.classList.add('visible');
+          text.classList.add('visible');
+        } else {
+          aboutImage.classList.remove('visible');
+          image.classList.remove('visible');
+          text.classList.remove('visible');
+        }
+      },
+      { threshold: 0.2 }
+    );
 
-  const mapStyle = {
-    width: '100%',
-    height: '450px',
-    borderRadius: '12px'
-  };
+    if (aboutImage) observer.observe(aboutImage);
 
-  // Coordinates for Okpanam, Asaba, Delta State
-  const center = [6.21928, 6.69030];
+    return () => {
+      if (aboutImage) observer.disconnect();
+    };
+  }, []);
+
+  // Coordinates for Okpanam, Asaba, Delta State (Google Maps format)
+  const center = { lat: 6.21928, lng: 6.69030 };
+
+  const aboutStructuredData = getLocalBusinessStructuredData();
 
   return (
     <section className="about">
+      <SEOHead 
+        title="About Us - De-Hilltop Hotel & Apartments | Our Story"
+        description="Learn about De-Hilltop Hotel & Apartments in Okpanam, Asaba. Discover our story, facilities, and commitment to providing comfortable, secure, and convenient accommodation."
+        keywords="about De-Hilltop Hotel, hotel story, Okpanam hotel, Asaba accommodation, Delta State hotel, hotel facilities, about us"
+        canonicalUrl="https://de-hilltop.com/about"
+        structuredData={aboutStructuredData}
+      />
       <Navbar />
       {/* Hero */}
       <div className="about-hero">
         <div className="hero-overlay">
           <h1>About De-HillTop Apartments</h1>
-          {/* <p>Comfortable, Secure & Convenient Living in Okpanam, Asaba</p> */}
+          <p>Comfortable, Secure & Convenient Living in Okpanam, Asaba</p>
         </div>
       </div>
 
@@ -46,48 +64,43 @@ const AboutPage = () => {
       <div className="about-container">
         <div className="about-text">
           <h3>ABOUT THE DE-HILLTOP HOTEL AND APARTMENTS</h3>
-          <h2 />Hello and welcome to De-HillTop Apartments, your premier destination for comfortable and secure living in the heart of Okpanam, Asaba.
-          <p>At De-HillTop Apartments, we understand the importance of finding a place that not only meets your needs <br /> but also exceeds your expectations. Our apartments are thoughtfully designed to offer <br /> a blend of modern amenities and cozy comforts, ensuring that every stay is both enjoyable and memorable.</p>
+          <h2>Welcome to De-HillTop Apartments</h2>
+          <p>
+            At De-HillTop Apartments, we understand the importance of finding a place that not only meets your needs <br />
+            but also exceeds your expectations. Our apartments are thoughtfully designed to offer <br />
+            a blend of modern amenities and cozy comforts, ensuring that every stay is both enjoyable and memorable.
+          </p>
         </div>
-        <div className="about-image">
-          <div className="aboutimage-image"></div>
-          <div className="aboutimage-text">
-              <h2>The Apartment</h2>
-              <h4>9 floors with 23 rooms</h4>
-              <p>Our Hotel has 23 floors with 358 rooms and suites, making the <br />
-              De-HillTop Hotel and Apartments one of the largest hotels in <br />
-              Asaba. Each room is elegantly furnished and equipped with <br />
-              modern amenities to ensure a comfortable stay. Whether you're <br />
-              here for business or leisure, our rooms provide the perfect <br />
-              
-              </p>
+        <div className="about-image" ref={aboutImageRef}>
+          <div className="aboutimage-image">
+            <img src={Img4} alt="De-Hilltop Hotel and Apartments exterior view showcasing modern architecture in Okpanam, Asaba" />
           </div>
-
+          <div className="aboutimage-text">
+            <h2>The Duplex Suites</h2>
+            <h4>5 luxury duplex suites</h4>
+            <p>
+              Our Hotel features 5 spacious duplex suites, each thoughtfully <br />
+              designed with 2 bedrooms, a comfortable parlour, dining area, <br />
+              fully equipped kitchen, and private balcony. Each suite spans <br />
+              two floors offering ample space and privacy. Whether you're <br />
+              here for business or leisure, our suites provide the perfect <br />
+              blend of luxury, comfort, and home-like convenience.
+            </p>
+          </div>
         </div>
       </div>
 
-
-      {/* OpenStreetMap Section */}
-      <div style={{ margin: '40px 0' }}>
-        <h3 style={{ textAlign: 'center', marginBottom: '16px' }}>Our Location</h3>
-        <MapContainer center={center} zoom={17} style={mapStyle} scrollWheelZoom={false}>
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
-          />
-          <Marker position={center}>
-            <Popup>
-              De-HillTop Apartments<br />Okpanam, Asaba, Delta State
-            </Popup>
-          </Marker>
-        </MapContainer>
-      </div>
-
-
+      {/* Google Maps Section */}
+      <GoogleMaps 
+        center={center}
+        zoom={17}
+        title="De-HillTop Hotel and Apartments"
+        address="Okpanam, Asaba, Delta State, Nigeria"
+      />
 
       <Footer />
     </section>
   );
-}
+};
 
 export default AboutPage;

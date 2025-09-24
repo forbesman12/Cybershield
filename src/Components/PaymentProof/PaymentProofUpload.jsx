@@ -20,7 +20,7 @@ const PaymentProofUpload = ({ bookingData, onUploadSuccess, onClose }) => {
     if (bookingData?.id) {
       checkProofStatus();
     }
-  }, [bookingData?.id]);
+  }, [bookingData?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const checkProofStatus = async () => {
     if (!authUtils.isAuthenticated()) return;
@@ -28,8 +28,8 @@ const PaymentProofUpload = ({ bookingData, onUploadSuccess, onClose }) => {
     try {
       const response = await paymentApi.getPaymentProofStatus(bookingData.id);
       setProofStatus(response.data);
-    } catch (error) {
-      // Silently handle - user might not have uploaded proof yet
+    } catch {
+      // Silently handle - user might not have uploaded proof yet  
       console.log('No existing proof found');
     }
   };

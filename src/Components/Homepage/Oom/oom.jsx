@@ -1,53 +1,94 @@
-// components/RoomsSection.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./oom.css";
 import { roomsData } from "../../Models/roomsData";
 
-// ✅ Import the model
-
-
 const RoomsSection = () => {
-  const [startIndex, setStartIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
   const navigate = useNavigate();
-  const itemsPerPage = 3;
+  const roomsPerPage = 3;
+  const roomsCardsRef = useRef(null);
+  
+  // Calculate pagination values
+  const totalPages = Math.ceil(roomsData.length / roomsPerPage);
+  const startIndex = currentPage * roomsPerPage;
+  const endIndex = Math.min(startIndex + roomsPerPage, roomsData.length);
+  const currentRooms = roomsData.slice(startIndex, endIndex);
+  
+  // Animation effect for cards
+  useEffect(() => {
+    const roomsCards = roomsCardsRef.current;
+    const cards = roomsCards?.querySelectorAll('.room-card');
 
-  const handlePrev = () => {
-    if (startIndex > 0) {
-      setStartIndex(startIndex - 1);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          roomsCards?.classList.add('visible');
+          cards?.forEach(card => card.classList.add('visible'));
+        } else {
+          roomsCards?.classList.remove('visible');
+          cards?.forEach(card => card.classList.remove('visible'));
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (roomsCards) observer.observe(roomsCards);
+
+    return () => {
+      if (roomsCards) observer.disconnect();
+    };
+  }, [currentPage]); // Re-run when page changes
+
+  const handlePrevious = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
     }
   };
 
   const handleNext = () => {
-    if (startIndex + itemsPerPage < roomsData.length) {
-      setStartIndex(startIndex + 1);
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
     }
   };
 
-  const totalRooms = roomsData.length;
+  const isPrevDisabled = currentPage === 0;
+  const isNextDisabled = currentPage === totalPages - 1;
 
   return (
     <div className="rooms-section">
       <div className="rooms-header">
         <h2>Rooms & Suites</h2>
         <div className="rooms-nav">
-          <span>{String(startIndex + 1).padStart(2, "0")}</span>
+          <span>{String(currentPage + 1).padStart(2, "0")}</span>
           <div className="progress-bar">
             <div
               className="progress-fill"
               style={{
-                width: `${((startIndex + 1) / totalRooms) * 100}%`,
+                width: `${((currentPage + 1) / totalPages) * 100}%`,
               }}
             ></div>
           </div>
-          <span>{String(totalRooms).padStart(2, "0")}</span>
-          <button onClick={handlePrev}>Prev</button>
-          <button onClick={handleNext}>Next</button>
+          <span>{String(totalPages).padStart(2, "0")}</span>
+          <button 
+            onClick={handlePrevious} 
+            disabled={isPrevDisabled}
+            style={{ opacity: isPrevDisabled ? 0.5 : 1 }}
+          >
+            Prev
+          </button>
+          <button 
+            onClick={handleNext} 
+            disabled={isNextDisabled}
+            style={{ opacity: isNextDisabled ? 0.5 : 1 }}
+          >
+            Next
+          </button>
         </div>
       </div>
 
-      <div className="rooms-cards">
-        {roomsData.slice(startIndex, startIndex + itemsPerPage).map((room) => (
+      <div className="rooms-cards" ref={roomsCardsRef}>
+        {currentRooms.map((room) => (
           <div
             className="room-card"
             key={room.id}
@@ -55,10 +96,17 @@ const RoomsSection = () => {
             style={{ cursor: "pointer" }}
           >
             <div className="room-image">
-              <img src={room.image} alt={room.name} />
+              <img 
+                src={room.image} 
+                alt={room.name}
+                onError={(e) => {
+                  console.error(`Failed to load image for room: ${room.name}`, room.image);
+                  e.target.style.display = 'none';
+                }}
+              />
             </div>
             <div className="room-info">
-              <h3>{room.name} →</h3>
+              <h3>{room.name}</h3>
               <hr />
               <div className="ins">
                 <div className="left">

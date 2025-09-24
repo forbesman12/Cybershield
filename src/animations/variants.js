@@ -1,78 +1,54 @@
-// Animation variants for Framer Motion
+// Animation variants for Framer Motion - DISABLED
+// All animations replaced with static objects to remove animations
+
 export const fadeIn = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 },
-  transition: { duration: 0.6, ease: "easeOut" }
+  // Removed animation properties, keeping only final state
 };
 
 export const fadeInUp = {
-  initial: { opacity: 0, y: 30 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6, ease: "easeOut" }
+  // Removed animation properties, keeping only final state
 };
 
 export const fadeInLeft = {
-  initial: { opacity: 0, x: -30 },
-  animate: { opacity: 1, x: 0 },
-  transition: { duration: 0.6, ease: "easeOut" }
+  // Removed animation properties, keeping only final state
 };
 
 export const fadeInRight = {
-  initial: { opacity: 0, x: 30 },
-  animate: { opacity: 1, x: 0 },
-  transition: { duration: 0.6, ease: "easeOut" }
+  // Removed animation properties, keeping only final state
 };
 
 export const scaleIn = {
-  initial: { opacity: 0, scale: 0.9 },
-  animate: { opacity: 1, scale: 1 },
-  transition: { duration: 0.5, ease: "easeOut" }
+  // Removed animation properties, keeping only final state
 };
 
 export const staggerContainer = {
-  initial: {},
-  animate: {
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2
-    }
-  }
+  // Removed animation properties, keeping only final state
 };
 
 export const staggerItem = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5 }
+  // Removed animation properties, keeping only final state
 };
 
-// Hover animations
+// Hover animations - DISABLED
 export const hoverScale = {
-  scale: 1.05,
-  transition: { duration: 0.2 }
+  // Removed animation properties, keeping only final state
 };
 
 export const hoverLift = {
-  y: -5,
-  transition: { duration: 0.2 }
+  // Removed animation properties, keeping only final state
 };
 
-// Scroll-triggered animations
+// Scroll-triggered animations - DISABLED
 export const scrollReveal = {
-  initial: { opacity: 0, y: 50 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, amount: 0.3 },
-  transition: { duration: 0.6, ease: "easeOut" }
+  // Removed animation properties, keeping only final state
 };
 
-// Button animations
+// Button animations - DISABLED
 export const buttonTap = {
-  scale: 0.95,
-  transition: { duration: 0.1 }
+  // Removed animation properties, keeping only final state
 };
 
-// Image animations
+// Image animations - DISABLED
 export const imageHover = {
-  scale: 1.1,
-  transition: { duration: 0.3 }
+  // Removed animation properties, keeping only final state
 };

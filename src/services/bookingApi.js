@@ -1,5 +1,5 @@
 // API service for booking operations
-const API_BASE_URL = 'http://localhost:4001/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4001/api';
 
 export const bookingApi = {
   /**
@@ -8,10 +8,12 @@ export const bookingApi = {
    * @returns {Promise<Object>} API response
    */
   async createBooking(bookingData) {
+    // For now, try without authentication first as guest bookings should be allowed
     const response = await fetch(`${API_BASE_URL}/bookings`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
+        // Removed auth headers - guest bookings should not require authentication
       },
       body: JSON.stringify({
         ...bookingData,
@@ -150,7 +152,7 @@ export const bookingApi = {
           const paymentData = await paymentResponse.json();
           responseData.data.paymentProof = paymentData.data;
         }
-      } catch (error) {
+      } catch {
         // Payment proof not found or not accessible - that's okay
         console.log('No payment proof found for this booking');
       }

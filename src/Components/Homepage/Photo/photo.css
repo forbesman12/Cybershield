@@ -1,7 +1,7 @@
 .gallery-section {
   background: #fff;
   color: #000;
-  padding: 7rem 5.5rem;
+  padding: 1rem 5.5rem;
 }
 
 .gallery-header {
@@ -59,4 +59,57 @@
 
 .gallery-item:hover {
   transform: scale(1.05);
+}
+
+
+
+/* ========= RESPONSIVE STYLES ========= */
+
+/* Tablets */
+@media (max-width: 992px) {
+  .gallery-section {
+    padding: 0rem 3rem;
+    margin-bottom: 20px;
+  }
+
+  .gallery-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .gallery-item {
+    width: 240px;
+  }
+
+  .gallery-item img {
+    height: 180px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+  .gallery-section {
+    padding: 0rem 1.5rem;
+    margin-bottom: 20px;
+  }
+
+  .gallery-header h2 {
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+  }
+
+  .gallery-header p {
+    font-size: 0.9rem;
+  }
+
+  .gallery-scroll {
+    gap: 0.7rem;
+  }
+
+  .gallery-item {
+    width: 200px;
+  }
+
+  .gallery-item img {
+    height: 150px;
+  }
 }

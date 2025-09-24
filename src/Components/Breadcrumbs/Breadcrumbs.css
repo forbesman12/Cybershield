@@ -1,0 +1,91 @@
+/* Breadcrumbs Component Styles */
+.breadcrumbs {
+  padding: 12px 0;
+  margin-bottom: 20px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.breadcrumb-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0;
+  padding: 0 20px;
+  list-style: none;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-link {
+  color: #6c757d;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.breadcrumb-link:hover {
+  color: #495057;
+  background-color: #e9ecef;
+  text-decoration: none;
+}
+
+.breadcrumb-current {
+  color: #495057;
+  font-weight: 500;
+  padding: 4px 8px;
+}
+
+.breadcrumb-separator {
+  color: #6c757d;
+  margin: 0 8px;
+  user-select: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .breadcrumb-list {
+    padding: 0 15px;
+    font-size: 13px;
+  }
+  
+  .breadcrumb-separator {
+    margin: 0 6px;
+  }
+  
+  .breadcrumb-link,
+  .breadcrumb-current {
+    padding: 2px 6px;
+  }
+}
+
+/* Dark theme support (if needed) */
+@media (prefers-color-scheme: dark) {
+  .breadcrumbs {
+    background-color: #343a40;
+    border-bottom-color: #495057;
+  }
+  
+  .breadcrumb-link {
+    color: #adb5bd;
+  }
+  
+  .breadcrumb-link:hover {
+    color: #f8f9fa;
+    background-color: #495057;
+  }
+  
+  .breadcrumb-current {
+    color: #f8f9fa;
+  }
+  
+  .breadcrumb-separator {
+    color: #6c757d;
+  }
+}

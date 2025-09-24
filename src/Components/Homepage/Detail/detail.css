@@ -1,4 +1,4 @@
-/* ✅ TAGS SECTION */
+/* Styles for #why-choose-us */
 .tags {
   padding: 4.5rem 8rem;
   margin-inline: 7rem;
@@ -8,14 +8,44 @@
   color: #FFF;
   justify-content: space-between;
   gap: 2rem;
-  flex-wrap: wrap; /* allow wrapping */
+  flex-wrap: wrap;
   border-radius: 12px;
+  opacity: 0;
+  transition: opacity 0.6s ease-out;
+}
+
+.tags.visible {
+  opacity: 1;
 }
 
 .tag {
   display: flex;
   gap: 15px;
   align-items: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.tag.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tag:nth-child(1).visible {
+  transition-delay: 0.1s;
+}
+
+.tag:nth-child(2).visible {
+  transition-delay: 0.2s;
+}
+
+.tag:nth-child(3).visible {
+  transition-delay: 0.3s;
+}
+
+.tag:nth-child(4).visible {
+  transition-delay: 0.4s;
 }
 
 .icons {
@@ -30,39 +60,7 @@
   flex-shrink: 0;
 }
 
-/* ✅ TAGS RESPONSIVENESS */
-@media (max-width: 992px) {
-  .tags {
-    padding: 3rem 4rem;
-    margin-inline: 3rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .tags {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 2.5rem 2rem;
-    margin-inline: 1.5rem;
-    margin-block: 2rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .tags {
-    padding: 1.8rem 1rem;
-    margin-inline: 1rem;
-    margin-block: 1.5rem;
-  }
-
-  .icons {
-    width: 48px;
-    height: 48px;
-  }
-}
-
-
-/* ✅ ABOUT SECTION */
+/* About Section */
 .about-section {
   display: flex;
   align-items: center;
@@ -71,6 +69,12 @@
   overflow: hidden;
   background: #fff;
   gap: 2rem;
+  opacity: 0;
+  transition: opacity 0.6s ease-out;
+}
+
+.about-section.visible {
+  opacity: 1;
 }
 
 .about-content {
@@ -78,6 +82,14 @@
   max-width: 720px;
   padding: 80px 6vw;
   z-index: 2;
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.about-content.visible {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .section-subtitle {
@@ -126,7 +138,6 @@
   background: var(--accent-dark);
 }
 
-/* Right image column */
 .hilltop {
   flex: 1 1 45%;
   min-height: 620px;
@@ -134,6 +145,15 @@
   background-position: center right;
   background-repeat: no-repeat;
   position: relative;
+  opacity: 0;
+  transform: translateX(50px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transition-delay: 0.2s;
+}
+
+.hilltop.visible {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .hilltop::before {
@@ -156,6 +176,14 @@
   inset: 0;
   background: rgba(0,0,0,0.03);
 }
+
+
+
+
+
+
+
+
 
 /* ✅ ABOUT RESPONSIVENESS */
 @media (max-width: 1100px) {
@@ -196,4 +224,36 @@
   .about-content { padding: 24px 5vw; }
   .about-section { min-height: auto; }
   .hilltop { min-height: 260px; }
+}
+
+
+/* ✅ TAGS RESPONSIVENESS */
+@media (max-width: 992px) {
+  .tags {
+    padding: 3rem 4rem;
+    margin-inline: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .tags {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2.5rem 2rem;
+    margin-inline: 1.5rem;
+    margin-block: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tags {
+    padding: 1.8rem 1rem;
+    margin-inline: 1rem;
+    margin-block: 1.5rem;
+  }
+
+  .icons {
+    width: 48px;
+    height: 48px;
+  }
 }

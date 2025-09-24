@@ -15,7 +15,7 @@ const PaymentStatus = ({ bookingId, onClose }) => {
     if (bookingId) {
       fetchBookingData();
     }
-  }, [bookingId]);
+  }, [bookingId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchBookingData = async () => {
     try {
@@ -31,7 +31,7 @@ const PaymentStatus = ({ bookingId, onClose }) => {
         try {
           const proofResponse = await paymentApi.getPaymentProofStatus(bookingId);
           setProofStatus(proofResponse.data);
-        } catch (proofError) {
+        } catch {
           // No proof uploaded yet, which is fine
           console.log('No payment proof found');
         }

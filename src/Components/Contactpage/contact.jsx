@@ -1,7 +1,10 @@
-
-import React from "react";
+import React, { useState } from "react";
 import './contact.css';
 import Navbar from "../Homepage/Navbar/Navbar";
+import ImgContact from '../../Assets/H6.jpg';
+import Footer from "../Homepage/Footer/Footer";
+import SEOHead from '../SEO/SEOHead';
+import { getLocalBusinessStructuredData } from '../SEO/structuredData';
 import {
   FaFileContract,
   FaShieldAlt,
@@ -13,121 +16,112 @@ import {
 } from "react-icons/fa";
 
 const ContactPage = () => {
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch("https://formspree.io/f/mrbaoazj", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json",
+        },
+      });
+      if (response.ok) {
+        setShowPopup(true);
+        form.reset(); // Clear the form after successful submission
+      } else {
+        alert("Error submitting form. Please try again.");
+      }
+    } catch (error) {
+      alert("Error submitting form: " + error.message);
+    }
+  };
+
+  const closePopup = () => {
+    setShowPopup(false);
+  };
+
+  const contactStructuredData = getLocalBusinessStructuredData();
+
   return (
     <>
-      <Navbar simple />
+      <SEOHead 
+        title="Contact Us - De-Hilltop Hotel | Get in Touch"
+        description="Contact De-Hilltop Hotel for reservations, inquiries, or assistance. Reach us by phone, email, or visit us at our location. We're here to help with your hotel booking needs."
+        keywords="contact De-Hilltop Hotel, hotel contact, reservations, customer service, hotel phone number, hotel email, contact information"
+        canonicalUrl="https://de-hilltop.com/contact"
+        structuredData={contactStructuredData}
+      />
+      <Navbar />
+      <div className="contact-page">
+        <div className="contact-hero" style={{ backgroundImage: `url(${ImgContact})`, height: '40vh', backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
 
-      <main className="container">
-        <div className="grid">
-          <section>
-            <hgroup>
-              <h2>Contact Us</h2>
-              <h3>We're here to help you recover your assets</h3>
-            </hgroup>
+        <div className="contact-container">
+          <div className="email-container">
+            <p>NEED ANY HELP</p>
+            <h1>Feel free to write</h1>
 
-            <h3>Our Standards</h3>
-            <ul>
-              <li><FaFileContract style={{ marginRight: "0.5rem" }} /> Legally Binding Agreements</li>
-              <li><FaShieldAlt style={{ marginRight: "0.5rem" }} /> No Recovery, No Fee Guarantee</li>
-              <li><FaHandshake style={{ marginRight: "0.5rem" }} /> In-Person Consultations Available</li>
-            </ul>
-
-            <h3>Contact Information</h3>
-            <p><strong><FaEnvelope /> Email:</strong> <a href="mailto:support@cryptorecovers.com">support@cryptorecovers.com</a></p>
-            <p><strong><FaPhone /> Phone:</strong> <a href="tel:+31851091211">+31 85 109 1211</a></p>
-            <p><strong><FaBuilding /> Chambers of Commerce:</strong> 75927276</p>
-
-            <h3>Let’s Get Started!</h3>
-            <p>Fields marked with an * are required.</p>
-
-            <form>
-              <label htmlFor="name">Name *</label>
-              <input type="text" id="name" name="name" placeholder="Your full name" required />
-
-              <label htmlFor="email">Email *</label>
-<div className="email-input-container">
-  <input type="email" id="email" name="email" placeholder="you@example.com" required />
-  <button 
-    type="button" 
-    onClick={() => document.querySelector('form').requestSubmit()} 
-    className="email-submit-icon"
-  > 
-    <FaPaperPlane />
-  </button>
-</div>
-
-              <label htmlFor="phone">Phone</label>
-              <input type="tel" id="phone" name="phone" placeholder="+1234567890" />
-
-              <label htmlFor="country">Country *</label>
-              <select id="country" name="country" required>
-                <option value="">- Select Country -</option>
-                <option value="nl">Netherlands</option>
-                <option value="us">United States</option>
-                <option value="uk">United Kingdom</option>
-                <option value="de">Germany</option>
-                <option value="other">Other</option>
-              </select>
-
-              <label htmlFor="recovery-type">Type of Recovery</label>
-              <select id="recovery-type" name="recovery-type">
-                <option value="password">Password Recovery</option>
-                <option value="wallet">Wallet Recovery</option>
-                <option value="phishing">Phishing Scam</option>
-                <option value="other">Other</option>
-              </select>
-
-              <label htmlFor="message">Message *</label>
-              <textarea id="message" name="message" rows="5" required placeholder="Please explain your situation in as much detail as possible..."></textarea>
-
-              <label>
-                <input type="checkbox" required />
-                I agree with the <a href="#">Privacy Policy</a> *
-              </label>
-
-              <button type="submit" onClick={(e) => e.preventDefault()}>Submit</button>
+            <form onSubmit={handleSubmit} className="contact-form" action="https://formspree.io/f/mrbaoazj" method="POST">
+              <div className="flex1">
+                <div className="form-group">
+                  <input type="text" name="name" placeholder="Your Name" required />
+                </div>
+                <div className="form-group">
+                  <input type="email" name="email" placeholder="Your Email" required />
+                </div>
+              </div>
+              <div className="form-group">
+                <input type="text" name="subject" placeholder="Subject" required />
+              </div>
+              <div className="form-group">
+                <textarea name="message"  rows="10" required></textarea>
+              </div>
+              <button type="submit" className="submit-button">Send Message</button>
             </form>
-          </section>
-        </div>
-      </main>
+          </div>
 
-      <section aria-label="Subscribe example">
-        <div className="container">
-          <article>
-            <hgroup>
-              <h2>Stay Updated</h2>
-              <h3>Subscribe for insights and case updates</h3>
-            </hgroup>
-            <form className="grid">
-              <input
-                type="text"
-                id="firstname"
-                name="firstname"
-                placeholder="First Name"
-                aria-label="First Name"
-                required
-              />
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="Email"
-                aria-label="Email"
-                required
-              />
-              <button type="submit" onClick={(e) => e.preventDefault()}>
-                Subscribe
-              </button>
-            </form>
-          </article>
+          <div className="helptext">
+            <p>Need any Help?</p>
+            <h2>Get in touch with us</h2>
+            <p>We're here to help! Whether you have a question, need assistance, <br />
+              have a suggestion, or want to learn more about our services, we'd love to hear from you. <br />Please don't hesitate to reach out to us using the contact information below.</p>
+            <div className="call">
+              <div className="icon"><FaPhone /></div>
+              <div className="text">
+                <h2>Have any questions</h2>
+                <p>Free +234 - (0)80 - 330 - 876 - 66</p>
+              </div>
+            </div>
+            <div className="call">
+              <div className="icon"><FaPaperPlane/></div>
+              <div className="text">
+                <p>Info@dehilltopapartment.com</p>
+              </div>
+            </div>
+            <div className="location">
+              <div className="icon"><FaBuilding /></div>
+              <div className="text">
+                <p>Ofili Drive, Last Redeem Bustop <br />Off Chief Ukah Way, Okpanam Delta State</p>
+              </div>
+            </div>
+          </div>
         </div>
-      </section>
 
-      <footer className="container">
-        <small>
-          <a href="#">Privacy</a> • <a href="#">Terms</a>
-        </small>
-      </footer>
+        {showPopup && (
+          <div className="popup-overlay">
+            <div className="popup-content">
+              <h1>Thank you we have received your message</h1>
+              <button onClick={closePopup} className="popup-close-button">Close</button>
+            </div>
+          </div>
+        )}
+      </div>
+      <Footer />
     </>
   );
 };

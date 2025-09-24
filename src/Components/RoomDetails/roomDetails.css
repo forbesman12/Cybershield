@@ -1,5 +1,11 @@
+/* Base styles remain mostly unchanged */
 .heroRoomImage {
   background-image: url('../../assets/images/L2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 55vh; /* Default height */
+  width: 100%;
 }
 
 /* Basic h1 styling */
@@ -7,11 +13,26 @@
   font-size: 1.9rem;
   font-weight: 200;
   color: var(--title);
-  margin-bottom: 1rem;
+  margin-bottom: 2.5rem;
   font-family: 'Manrope', sans-serif;
+  position: relative; /* Ensure underline positioning works */
 }
 
-/* Optional: Add the underline effect from your global styles */
+.leftSec p {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.75;
+  margin-bottom: 18px;
+}
+
+.leftSec h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: var(--title);
+  font-weight: 500;
+}
+
+/* Underline effect */
 .detailSec .leftSec h1::after {
   content: "";
   position: absolute;
@@ -23,44 +44,35 @@
   border-radius: 2px;
 }
 
-/* Container styling for better layout */
+/* Container styling */
 .detailSec {
-  padding-inline: 10rem;
+  padding-inline: 8rem;
   display: flex;
+  flex-direction: row; /* Default: side-by-side */
   margin: 40px;
   gap: 30px;
 }
 
-
-.leftSec {
-  flex: 2;
-  min-width: 0;
-}
-
 .rightSec {
   flex: 1;
-}
-
-.leftSec {
-  flex: 1;
-  border: 1px solid red;
   max-width: 100%;
 }
 
-/* flex list styling  */
+.leftSec {
+  flex: 2;
+  max-width: 100%;
+}
 
+/* Flex list styling */
 .leftSec ul {
   display: flex;
   flex-direction: row;
   gap: 2rem;
-  /* spacing between items */
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 20px;
   flex-wrap: nowrap;
-  /* prevent wrapping */
   overflow-x: auto;
-  /* allow scrolling if too long */
 }
 
 .leftSec li {
@@ -69,7 +81,6 @@
   position: relative;
   padding-left: 1.3rem;
   white-space: nowrap;
-  /* ✅ prevent text from breaking into multiple lines */
 }
 
 .leftSec li::before {
@@ -91,26 +102,22 @@
   margin-top: 10px;
   display: flex;
   gap: 10px;
-  border: 2px solid blue;
-  /* outer container border */
   padding: 8px;
-  /* space between container border & thumbnails */
   border-radius: 6px;
   justify-content: flex-start;
+  overflow-x: auto; /* Allow scrolling for thumbnails */
 }
 
 .thumbnail {
   width: 80px;
-  height: 250px;
+  height: 190px; /* Adjusted to square for consistency */
   object-fit: cover;
   border-radius: 5px;
   cursor: pointer;
   opacity: 0.7;
   transition: all 0.3s ease;
   box-sizing: border-box;
-  /* ✅ keeps border inside thumbnail size */
   border: 2px solid transparent;
-  /* default so no shift */
 }
 
 .thumbnail:hover {
@@ -120,29 +127,118 @@
 
 .thumbnail.active {
   border: 2px solid #ff5a5f;
-  /* active highlight stays inside */
   opacity: 1;
 }
 
+/* Responsive Design */
 
+/* ==============================
+   Mobile Devices (up to 767px)
+============================== */
+@media (max-width: 767px) {
+  .heroRoomImage {
+    height: 32vh; /* Slightly smaller hero for phones */
+  }
 
-/* Reservation Box */
-
-
-
-/* Responsive design */
-@media (max-width: 768px) {
   .detailSec {
-    flex-direction: column;
-    padding: 2rem 5%;
+    flex-direction: column; /* Stack content */
+    padding-inline: 1rem;
+    margin: 16px;
+    gap: 16px;
+  }
+
+  .leftSec,
+  .rightSec {
+    flex: 1;
+    max-width: 100%;
   }
 
   .detailSec .leftSec h1 {
-    font-size: 2rem;
+    font-size: 1.35rem;
+    margin-bottom: 1.25rem;
   }
 
-  .detailSec .leftSec h1::after {
-    width: 50px;
-    height: 2px;
+  .leftSec h2 {
+    font-size: 0.95rem;
+  }
+
+  .leftSec p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .leftSec ul {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 8px 0;
+  }
+
+  .leftSec li {
+    font-size: 0.85rem;
+    padding-left: 1rem;
+  }
+
+  .leftSec img {
+    max-height: 220px;
+  }
+
+  .thumbnails {
+    gap: 6px;
+    padding: 4px;
+  }
+
+  .thumbnail {
+    width: 56px;
+    height: 56px;
+  }
+
+  .amenities .row {
+    gap: 12px;
+  }
+
+  .amenities .row div {
+    font-size: 14px;
+  }
+}
+
+/* ==============================
+   Tablet Devices (768px to 1024px)
+============================== */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .heroRoomImage {
+    height: 42vh;
+  }
+
+  .detailSec {
+    flex-direction: row;
+    padding-inline: 1.5rem;
+    margin: 24px;
+    gap: 20px;
+  }
+
+  .detailSec .leftSec h1 {
+    font-size: 1.6rem;
+  }
+
+  .leftSec h2 {
+    font-size: 1.05rem;
+  }
+
+  .leftSec p {
+    font-size: 15px;
+  }
+
+  .leftSec ul {
+    gap: 1.25rem;
+    flex-wrap: wrap; /* allow wrapping if space is tight */
+  }
+
+  .leftSec img {
+    max-height: 300px;
+  }
+
+  .thumbnail {
+    width: 65px;
+    height: 65px;
   }
 }
